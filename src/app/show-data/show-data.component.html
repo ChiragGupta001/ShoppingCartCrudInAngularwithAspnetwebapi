@@ -1,0 +1,85 @@
+<div *ngIf="role === 'Admin'" class="container">
+    <button *ngIf="role === 'Admin'" class="btn btn-primary mb-2" routerLink="addItem">add Item</button>
+    <div class="card">
+        <p-table
+            #dt1
+            [value]="items"
+            dataKey="id"
+            [paginator]="true"
+            [rows]="2"
+            [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[2, 4, 6]"
+            (sortFunction)="customSort($event)"
+            [customSort]="true"
+            [globalFilterFields]="['id', 'name', 'description', 'category', 'quantity', 'price']"
+        >
+
+            <ng-template pTemplate="caption">
+                <div style="text-align: right">
+                    <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                    <input type="text" pInputText size="50" placeholder="search" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" style="width:auto" />
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="name">Name<p-sortIcon field="name"></p-sortIcon></th>
+                    <th>Image</th>
+                    <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+                    <th pSortableColumn="category">Category<p-sortIcon field="category"></p-sortIcon></th>
+                    <th pSortableColumn="price">Price<p-sortIcon field="price"></p-sortIcon></th>
+                    <th pSortableColumn="quantity">Quantity<p-sortIcon field="quantity"></p-sortIcon></th>
+                    <th pSortableColumn="action">Action<p-sortIcon field="action"></p-sortIcon></th>
+                </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td><img [src]="item.image" alt="image" height="150" width="200"></td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.price}}</td>
+                    <td>
+                        <p-button class="mt-1" (click)="DetailItem(item)">Detail</p-button>
+                        <p-button class="ms-2" (click)="EditItem(item)">Edit</p-button>
+                        <p-button class="ms-2" (click)="DeleteItem(item)">Delete</p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="paginatorleft">
+                <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+            </ng-template>
+            
+            <ng-template pTemplate="paginatorright">
+                <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+            </ng-template>
+
+        </p-table>
+    </div>
+</div>
+
+<div *ngIf="role === 'User'" class="container">
+    <div class="row">
+        <p-card *ngFor="let item of items" [header]="item.name" [subheader]="item.category" [style]="{ width: '360px'}" class="col-md-4 my-3">
+            <ng-template pTemplate="header">
+                <img alt="Card" [src]="item.image" height="200"/>
+            </ng-template>
+            <p>
+                {{item.description}}
+            </p>
+            <h4><b>Quantity:  </b>{{item.quantity}}</h4>
+            <h4><b>Price:  </b>{{item.price}}</h4>
+            <ng-template pTemplate="footer">
+                <p-button label="Detail" icon="pi pi-check" (click)="DetailItem(item)"></p-button>
+            </ng-template>
+        </p-card>
+    </div>
+</div>
+<p-toast></p-toast>
